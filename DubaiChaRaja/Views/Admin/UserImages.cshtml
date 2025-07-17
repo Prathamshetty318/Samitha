@@ -1,0 +1,33 @@
+﻿﻿@{
+Layout = null;
+var images = ViewBag.Images as List<string>;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Images</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+    <nav class="navbar bg-white px-4 mb-4">
+        <a href="/Admin/Index" class="btn btn-outline-secondary">← Back to Admin</a>
+        <span class="ms-auto fw-bold">User Image Gallery</span>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            @foreach (var img in images)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="card shadow-sm">
+                        <img src="@Url.Content(img)" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</body>
+</html>

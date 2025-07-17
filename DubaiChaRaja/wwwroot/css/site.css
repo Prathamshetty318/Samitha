@@ -1,0 +1,115 @@
+body, html {
+    height: 100%;
+    overscroll-behavior: none;
+    overflow-x: hidden;
+}
+
+.bg-fixed-layout {
+    background-image: url('/Assets/Images/.png');
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+}
+
+.scroll-wrapper {
+    max-height: 100vh;
+    overflow-y: auto;
+    padding-bottom: 60px;
+}
+
+.sidebar {
+    background-color: transparent;
+    color: black;
+    min-height: 100vh;
+    padding-top: 20px;
+}
+
+.mycustombtn {
+    background-color: transparent;
+    color: black;
+    text-align: left;
+}
+
+    .mycustombtn:hover {
+        background-color: sandybrown;
+    }
+
+    .mycustombtn.active {
+        color: red !important;
+        border-left: 4px solid lime;
+    }
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        background-color: sandybrown;
+        top: 48px;
+        left: 0;
+        width: 240px;
+        z-index: 1050;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+        .sidebar.show {
+            transform: translateX(0);
+        }
+}
+
+.yell {
+    background-color: red;
+}
+
+td.truncate {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+td, th {
+    border: 1px solid #dee2e6 !important;
+}
+
+#descContent {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.modal-dialog {
+    max-width: 500px;
+}
+
+.sidebar.border-end {
+    border-right: 2px solid black;
+}
+
+.footer {
+    background-color: transparent;
+}
+
+.watermark-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: black;
+    opacity: 0.7;
+    z-index: 1000;
+}
+
+
+
+.card-img-top {
+    transition: transform 0.3s ease;
+}
+
+    .card-img-top:hover {
+        transform: scale(1.02);
+    }
+

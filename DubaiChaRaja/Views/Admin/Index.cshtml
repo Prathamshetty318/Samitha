@@ -1,0 +1,91 @@
+﻿﻿@{
+Layout = null;
+var Users = ViewBag.Users as List<DubaiChaRaja.Controllers.AdminController.UserSummary>;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Admin Dashboard</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel=" stylesheet" />
+</head>
+<body class="bg-light">
+
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 mb-4">
+		<span class="navbar-brand">Admin Panel</span>
+		]				<a href="/Auth/Logout" class="btn btn-outline-light">Logout</a>
+		]
+	</nav>
+
+	<div class="container">
+
+		<!--summary-->
+		<div class="row text-center mb-4">
+			<div class="col-md-4">
+				<div class="card shadow-sm">
+					<div class="card-body">
+						<h5>Total Users</h5>
+						<h3 class="text-primary">@ViewBag.TotalCount</h3>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card shadow-sm">
+					<div class="card-body">
+						<h5>Total Images</h5>
+						<h3 class="text-success">@ViewBag.TotalImages</h3>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card shadow-sm">
+					<div class="card-body">
+						<h5>Festival Records</h5>
+						<h3 class="text-warning">@ViewBag.TotalRecords</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!--user table-->
+		<div class="card shadow-sm">
+			<div class="card-header bg-white">
+				<h5 class="mb-0"> Regisered Users</h5>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-hover mb-0">
+					<thead class="table-light">
+						<tr>
+							<th>#</th>
+							<th>Username</th>
+							<th>Email</th>
+							<th>Images</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="userTable">
+						@for (int i = 0; i < Users.Count; i++)
+						{
+							<tr>
+								<td>@(i + 1)</td>
+								<td>@Users[i].Username</td>
+								<td>@Users[i].Email</td>
+								<td>@Users[i].ImageCount</td>
+								<td>
+									<a href="/Admin/UserImages?UserId=@Users[i].Id" class="btn btn-sm btn-outline-primary">View</a>
+									<a href="/Admin/DeleteUser/@Users[i].Id" class="btn btn-sm btn-outline-danger ms-2">Delete</a>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+
+
+</body>
+</html>

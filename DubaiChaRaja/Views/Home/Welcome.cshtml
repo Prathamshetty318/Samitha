@@ -1,0 +1,124 @@
+﻿﻿@{
+Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome | Ganesh Festival Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .bg-image {
+            background-image: url('@Url.Content("~/Assets/Images/.png")');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .bg-overlay {
+            background-color: rgba(0,0,0,0.5);
+            height: 100vh;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <div class="position-fixed bottom-0 start-0 px-3 py-1 text-white small" style="z-index: 1000; opacity: 0.7;">
+        <b>Made By - Pratham Shetty</b>
+    </div>
+
+
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg bg-transparent position-absolute top-0 end-0 start-0 px-4 pt-3 z-3 ">
+        <div class="ms-auto">
+            <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+            <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+        </div>
+    </nav>
+
+    <!-- Center Intro -->
+    <div class="bg-image d-flex align-items-center justify-content-center">
+        <div class="bg-overlay w-100 d-flex flex-column justify-content-center align-items-center text-center">
+            <h1 class="display-4 fw-bold">Ganesh Festival Tracker</h1>
+            <p class="lead mb-4">Track your festival contributions & history with ease</p>
+            <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#loginModal">Get Started</button>
+        </div>
+    </div>
+
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="loginForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Login</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3"><input name="username" class="form-control" placeholder="Username" required /></div>
+                        <div class="mb-3"><input name="password" type="password" class="form-control" placeholder="Password" required /></div>
+                        <div id="loginError" class="text-danger small"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="@Url.Action("ForgotPassword", "Home")" class="btn btn-outline-secondary me-2">Forgot Password</a>
+                        <button type="submit" class="btn btn-primary">Log In</button>
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="registerForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Register</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input name="username" class="form-control" placeholder="Username" required />
+                        </div>
+
+                        <div class="mb-3 d-flex">
+                            <input id="registerEmail" name="email" type="email" class="form-control me-2" placeholder="Email" required />
+                            <button type="button" id="sendCodeBtn" class="btn btn-outline-primary">Send Code</button>
+                        </div>
+
+                        <div class="mb-3" id="codeInputGroup" style="display: none;">
+                            <input id="codeBox" name="code" class="form-control" placeholder="Enter verification code" required />
+                            <small id="codeMag" class="text-success"></small>
+
+                        </div>
+
+                        <div class="mb-3">
+                            <input name="password" type="password" class="form-control" placeholder="Password" required />
+                        </div>
+
+                        <div id="registerError" class="text-danger small"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Register</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/auth.js"></script>
+
+</body>
+</html>
