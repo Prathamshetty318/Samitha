@@ -19,14 +19,21 @@ function loadRecords(year) {
     selectedYear = year;
     $.get(`/api/festival/get-by-year/${year}`, function (records) {
         const tbody = $("#recordsTable tbody").empty();
+
         records.forEach(r => {
-            tbody.append(`<tr>
+            let row = `<tr>
                 <td class="truncate clickable-text" title="${r.description}" data-bs-toggle="modal" data-bs-target="#descModal" data-desc="${r.description}">${r.description}</td>
                 <td>${r.amount}</td>
                 <td>${r.type}</td>
-                <td>${r.year}</td>
-                <td><button class="btn btn-sm btn-danger" onclick="deleteRecord(${r.id})">Delete</button></td>
-            </tr>`);
+                <td>${r.year}</td>`;
+
+            // ✅ Only add Delete button if hasAccess is 1
+            if (hasAccess === 1) {
+                row += `<td><button class="btn btn-sm btn-danger" onclick="deleteRecord(${r.id})">Delete</button></td>`;
+            }
+
+            row += `</tr>`;
+            tbody.append(row);
         });
 
         // 💡 Attach filtering after DOM update
@@ -40,11 +47,6 @@ function loadRecords(year) {
         updateSummary(records);
     });
 }
-
-$(document).on('click', '.clickable-text', function () {
-    const fullDesc = $(this).data('desc');
-    $("#descContent").text(fullDesc);
-});
 
 
 function deleteRecord(id) {

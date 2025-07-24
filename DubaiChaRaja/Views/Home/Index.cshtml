@@ -1,7 +1,18 @@
 ﻿﻿@{
 Layout = "~/Views/Shared/_Layout.cshtml";
 ViewData["Title"] = "Dashboard";
+
 }
+<script>
+    const hasAccess = @(Context.Session.GetInt32("hasaccess") ?? 0);
+</script>
+@if (ViewBag.HasAccess == 0)
+{
+    <div class="alert alert-warning" role="alert">
+         You do not have access. Please contact the admin.
+    </div>
+}
+
 
 @if (Context.Session.GetString("Username") == null)
 {
@@ -21,7 +32,8 @@ ViewData["Title"] = "Dashboard";
 
 
 <div class="row g-4">
-    <div class="col-lg-9">
+
+    <div class="col-9">
         <div class="row g-3">
             <div class="col-md-4">
                 <div class="card text-white bg-success">
@@ -49,7 +61,6 @@ ViewData["Title"] = "Dashboard";
             </div>
         </div>
 
-        <!-- Pie Chart for Mobile -->
         <div class="d-block d-lg-none mt-4">
             <div class="bg-transparent p-3 rounded" style="width: 100%; max-width: 350px; margin: auto;">
                 <canvas id="pieChartMobile" height="300"></canvas>
@@ -67,13 +78,8 @@ ViewData["Title"] = "Dashboard";
                 <input class="form-control" placeholder="Search Records" name="search" id="searchInput" />
             </div>
         </div>
-        <!-- Pie Chart for Mobile -->
-        <!-- Pie Chart for Desktop -->
-        <div class="position-absolute top-0 end-0 p-3 d-none d-lg-block mt-lg-4" style="z-index: 10;">
-            <div class="bg-transparent p-3 rounded " style="width: 300px;">
-                <canvas id="pieChart" height="300"></canvas>
-            </div>
-        </div>
+       
+        
 
 
 
@@ -115,7 +121,10 @@ ViewData["Title"] = "Dashboard";
                         <th style="min-width: 100px;">Amount</th>
                         <th style="min-width: 120px;">Type</th>
                         <th style="min-width: 80px;">Year</th>
-                        <th style="min-width: 100px;">Action</th>
+                            @if (Context.Session.GetInt32("hasaccess") == 1)
+                            {
+                                <th style="min-width: 100px;">Action</th>
+                            }
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -134,7 +143,13 @@ ViewData["Title"] = "Dashboard";
         </div>
 
     </div>
-
+    <div class="col-2">
+            <div class="mt-4"" style="z-index: 10;">
+                <div class="bg-transparent p-3 rounded " style="width: 300px;">
+                    <canvas id="pieChart" height="300"></canvas>
+                </div>
+            </div>
+    </div>
 
 </div>
 

@@ -37,6 +37,9 @@ namespace DubaiChaRaja.Controllers
             {
                 if (HttpContext.Session.GetInt32("UserId") == null)
                     return RedirectToAction("Welcome", "Home");
+                int hasAccess = HttpContext.Session.GetInt32("hasaccess") ?? 0;
+                ViewBag.HasAccess = hasAccess;
+
                 return View();
             }
 

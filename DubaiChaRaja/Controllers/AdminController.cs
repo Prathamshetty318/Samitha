@@ -27,7 +27,7 @@ namespace DubaiChaRaja.Controllers
             {
                 await conn.OpenAsync();
 
-                var cmd = new NpgsqlCommand("SELECT Id, Username, Email FROM Users", conn);
+                var cmd = new NpgsqlCommand("SELECT Id, Username, Email,hasaccess FROM Users", conn);
                 var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
@@ -36,6 +36,7 @@ namespace DubaiChaRaja.Controllers
                         Id = reader.GetInt32(0),
                         Username = reader.GetString(1),
                         Email = reader.GetString(2),
+                        hasaccess=reader.GetBoolean(3),
                         ImageCount = 0
                     });
                 }
@@ -105,12 +106,35 @@ namespace DubaiChaRaja.Controllers
             return RedirectToAction("Index", "Admin");
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleAccess(int id, bool access)
+        {
+            using (var conn = new NpgsqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                var cmd = new NpgsqlCommand("UPDATE Users SET hasaccess = @access WHERE Id = @id", conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@access", access);
+                int rows = await cmd.ExecuteNonQueryAsync();
+
+                if (rows > 0)
+                    return Ok();
+            }
+
+            return NotFound();
+        }
+
+
+
+
         public class UserSummary
         {
             public int Id { get; set; }
             public string Username { get; set; }
             public string Email { get; set; }
             public int ImageCount { get; set; }
+            public bool hasaccess { get; set; }
         }
     }
 }
