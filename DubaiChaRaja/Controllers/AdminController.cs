@@ -27,7 +27,7 @@ namespace DubaiChaRaja.Controllers
             {
                 await conn.OpenAsync();
 
-                var cmd = new NpgsqlCommand("SELECT Id, Username, Email FROM Users", conn);
+                var cmd = new NpgsqlCommand("SELECT Id, Username, Email, hasaccess ,access_requested FROM Users", conn);
                 var reader = await cmd.ExecuteReaderAsync();
                 while (await reader.ReadAsync())
                 {
@@ -36,6 +36,8 @@ namespace DubaiChaRaja.Controllers
                         Id = reader.GetInt32(0),
                         Username = reader.GetString(1),
                         Email = reader.GetString(2),
+                        hasaccess = reader.GetBoolean(3),
+                        access_requested = reader.GetBoolean(4),
                         ImageCount = 0
                     });
                 }
@@ -61,27 +63,37 @@ namespace DubaiChaRaja.Controllers
             return View();
         }
 
-        public async Task<IActionResult> UserImages(int UserId)
-        {
-            Console.WriteLine("UserImages called for UserId: " + UserId);
 
-            var list = new List<string>();
+
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleAccess([FromBody] ToggleAccessRequest request)
+        {
             using (var conn = new NpgsqlConnection(_connectionString))
             {
                 await conn.OpenAsync();
-                var cmd = new NpgsqlCommand("SELECT FileName FROM UserImages WHERE UserId = @UserId", conn);
-                cmd.Parameters.AddWithValue("@UserId", UserId);
-                var reader = await cmd.ExecuteReaderAsync();
 
-                while (await reader.ReadAsync())
-                {
-                    list.Add($"/uploads/{UserId}/{reader.GetString(0)}");
-                }
+                var cmd = new NpgsqlCommand("UPDATE Users SET hasaccess = @access WHERE id = @id", conn);
+                cmd.Parameters.AddWithValue("@access", request.HasAccess);
+                cmd.Parameters.AddWithValue("@id", request.UserId);
+
+                int rows = await cmd.ExecuteNonQueryAsync();
+                if (rows > 0)
+                    return Ok(new { message = "Access updated successfully!" });
+
+                return NotFound();
             }
-
-            ViewBag.Images = list;
-            return View();
         }
+
+        public class ToggleAccessRequest
+        {
+            public int UserId { get; set; }
+            public bool HasAccess { get; set; }
+        }
+
+
+
+       
 
         public async Task<IActionResult> DeleteUser(int id)
         {
@@ -111,6 +123,12 @@ namespace DubaiChaRaja.Controllers
             public string Username { get; set; }
             public string Email { get; set; }
             public int ImageCount { get; set; }
-        }
+            public bool hasaccess { get; set; }
+
+            public bool access_requested { get; set; }
+
+        }//hii
+
+
     }
 }

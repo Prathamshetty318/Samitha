@@ -30,15 +30,15 @@ namespace DubaiChaRaja.Service
             cmd.ExecuteNonQuery();
         }
 
-        public void ResetPassword(string email, string newPassword)
+        public void UpdatePassword(string email, string newPassword)
         {
-            var passwordHash = HashPassword(newPassword);
+            var hash = HashPassword(newPassword);
 
             using var conn = new NpgsqlConnection(_connectionString);
             conn.Open();
 
-            var cmd = new NpgsqlCommand("UPDATE Users SET PasswordHash = @PasswordHash WHERE Email = @Email", conn);
-            cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
+            var cmd = new NpgsqlCommand("UPDATE Users SET PasswordHash = @hash WHERE Email = @Email", conn);
+            cmd.Parameters.AddWithValue("@hash", hash);
             cmd.Parameters.AddWithValue("@Email", email);
             cmd.ExecuteNonQuery();
         }
@@ -90,18 +90,7 @@ namespace DubaiChaRaja.Service
         }
 
 
-        public void UpdatePassword(string email, string newPassword)
-        {
-            var hash = HashPassword(newPassword);
-
-            using var conn = new NpgsqlConnection(_connectionString);
-            conn.Open();
-
-            var cmd = new NpgsqlCommand("UPDATE Users SET PasswordHash = @hash WHERE Email = @Email", conn);
-            cmd.Parameters.AddWithValue("@hash", hash);
-            cmd.Parameters.AddWithValue("@Email", email);
-            cmd.ExecuteNonQuery();
-        }
+      
 
         public void SaveVerificationCode(string email, string code)
         {
@@ -128,8 +117,19 @@ namespace DubaiChaRaja.Service
             var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM PendingVerifications WHERE Email = @Email AND Code = @Code AND Expiry > NOW()", conn);
             cmd.Parameters.AddWithValue("@Email", email);
             cmd.Parameters.AddWithValue("@Code", code);
-            return (long)cmd.ExecuteScalar() > 0;
+
+            var isValid = (long)cmd.ExecuteScalar() > 0;
+
+            if (isValid)
+            {
+                var deleteCmd = new NpgsqlCommand("DELETE FROM PendingVerifications WHERE Email = @Email", conn);
+                deleteCmd.Parameters.AddWithValue("@Email", email);
+                deleteCmd.ExecuteNonQuery();
+            }
+
+            return isValid;
         }
+
 
         public string HashPassword(string password)
         {
@@ -138,5 +138,19 @@ namespace DubaiChaRaja.Service
             byte[] hashBytes = sha256.ComputeHash(bytes);
             return Convert.ToBase64String(hashBytes);
         }
+
+        public void SetUserAccess(int userId, bool hasAccess)
+        {
+            using var conn = new NpgsqlConnection(_connectionString);
+            conn.Open();
+
+            var cmd = new NpgsqlCommand("UPDATE Users SET hasaccess = @access WHERE Id = @id", conn);
+            cmd.Parameters.AddWithValue("@access", hasAccess);
+            cmd.Parameters.AddWithValue("@id", userId);
+            cmd.ExecuteNonQuery();
+        }
+
+
+       
     }
 }

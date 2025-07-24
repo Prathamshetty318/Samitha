@@ -12,9 +12,6 @@ namespace DubaiChaRaja.Service{
 
         void SaveVerificationCode(string email, string code);
         bool IsCodeValid(string email, string code);
-
-        void ResetPassword(string email, string newPassword);
-
         void UpdatePassword(string email, string newPassword);
 
 

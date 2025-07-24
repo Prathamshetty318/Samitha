@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    var SelectedYear = (int)ViewBag.SelectedYear ;
+    var totalIncome = ViewBag.TotalIncome;
+    var totalExpense = ViewBag.TotalExpense;
+    var balance = ViewBag.Balance;
+    var Years = ViewBag.Years as List<int>;
+}
+
+<h2>Dashboard - @SelectedYear</h2>
+
+<form method="get" asp-action="Dashboard">
+    <label for="year">Select Year:</label>
+    <select id="year" name="year" onchange="this.form.submit()">
+        @foreach (var y in Years)
+        {
+            if (y == SelectedYear)
+            {
+                <option value="@y" selected>@y</option>
+            }
+            else
+            {
+                <option value="@y">@y</option>
+            }
+        }
+    </select>
+</form>
+
+<hr />
+
+<div>
+    <h4>Total Income: ₹@totalIncome</h4>
+    <h4>Total Expense: ₹@totalExpense</h4>
+    <h4>Balance: ₹@balance</h4>
+</div>

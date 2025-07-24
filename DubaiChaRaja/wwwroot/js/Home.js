@@ -14,22 +14,28 @@ function updateSummary(records) {
 }
 
 
-
 function loadRecords(year) {
     selectedYear = year;
+    const hasAccess = parseInt(document.getElementById("hasAccess").value) === 1;
+
     $.get(`/api/festival/get-by-year/${year}`, function (records) {
         const tbody = $("#recordsTable tbody").empty();
         records.forEach(r => {
-            tbody.append(`<tr>
-                <td class="truncate clickable-text" title="${r.description}" data-bs-toggle="modal" data-bs-target="#descModal" data-desc="${r.description}">${r.description}</td>
-                <td>${r.amount}</td>
-                <td>${r.type}</td>
-                <td>${r.year}</td>
-                <td><button class="btn btn-sm btn-danger" onclick="deleteRecord(${r.id})">Delete</button></td>
-            </tr>`);
+            let row = `
+                <tr>
+                    <td class="truncate clickable-text" title="${r.description}" data-bs-toggle="modal" data-bs-target="#descModal" data-desc="${r.description}">${r.description}</td>
+                    <td>${r.amount}</td>
+                    <td>${r.type}</td>
+                    <td>${r.year}</td>`;
+
+            if (hasAccess) {
+                row += `<td><button class="btn btn-sm btn-danger" onclick="deleteRecord(${r.id})">Delete</button></td>`;
+            }
+
+            row += `</tr>`;
+            tbody.append(row);
         });
 
-        // 💡 Attach filtering after DOM update
         $("#searchInput").off("keyup").on("keyup", function () {
             const value = $(this).val().toLowerCase();
             $("#recordsTable tbody tr").filter(function () {
@@ -40,6 +46,33 @@ function loadRecords(year) {
         updateSummary(records);
     });
 }
+
+
+//function loadRecords(year) {
+//    selectedYear = year;
+//    $.get(`/api/festival/get-by-year/${year}`, function (records) {
+//        const tbody = $("#recordsTable tbody").empty();
+//        records.forEach(r => {
+//            tbody.append(`<tr>
+//                <td class="truncate clickable-text" title="${r.description}" data-bs-toggle="modal" data-bs-target="#descModal" data-desc="${r.description}">${r.description}</td>
+//                <td>${r.amount}</td>
+//                <td>${r.type}</td>
+//                <td>${r.year}</td>
+//                <td><button class="btn btn-sm btn-danger" onclick="deleteRecord(${r.id})">Delete</button></td>
+//            </tr>`);
+//        });
+
+//        // 💡 Attach filtering after DOM update
+//        $("#searchInput").off("keyup").on("keyup", function () {
+//            const value = $(this).val().toLowerCase();
+//            $("#recordsTable tbody tr").filter(function () {
+//                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+//            });
+//        });
+
+//        updateSummary(records);
+//    });
+//}
 
 $(document).on('click', '.clickable-text', function () {
     const fullDesc = $(this).data('desc');

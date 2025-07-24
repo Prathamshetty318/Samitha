@@ -59,7 +59,7 @@ namespace DubaiChaRaja.Service
                             {
                                 records.Add(new FestivalRecord
                                 {
-                                    Id = Convert.ToInt32(reader["Id"]), // ✅ This was missing
+                                    Id = Convert.ToInt32(reader["Id"]), 
                                     Description = reader["Description"].ToString(),
                                     Amount = Convert.ToDecimal(reader["Amount"]),
                                     Type = reader["Type"].ToString(),

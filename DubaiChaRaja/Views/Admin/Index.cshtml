@@ -17,9 +17,7 @@ var Users = ViewBag.Users as List<DubaiChaRaja.Controllers.AdminController.UserS
 		]
 	</nav>
 
-	<div class="container">
-
-		<!--summary-->
+	
 		<div class="row text-center mb-4">
 			<div class="col-md-4">
 				<div class="card shadow-sm">
@@ -60,7 +58,8 @@ var Users = ViewBag.Users as List<DubaiChaRaja.Controllers.AdminController.UserS
 							<th>#</th>
 							<th>Username</th>
 							<th>Email</th>
-							<th>Images</th>
+							<th>Message</th>
+							<th>Access</th>
 							<th>Actions</th>
 						</tr>
 					</thead>
@@ -71,9 +70,22 @@ var Users = ViewBag.Users as List<DubaiChaRaja.Controllers.AdminController.UserS
 								<td>@(i + 1)</td>
 								<td>@Users[i].Username</td>
 								<td>@Users[i].Email</td>
-								<td>@Users[i].ImageCount</td>
 								<td>
-									<a href="/Admin/UserImages?UserId=@Users[i].Id" class="btn btn-sm btn-outline-primary">View</a>
+									@if(Users[i].access_requested)
+								{
+									<span class="badge bg-info text-dark">User requested access</span>
+								}
+							</td>
+								<td>
+									<button class="btn btn-sm toggle-access-btn @(Users[i].hasaccess ? "btn-warning" : "btn-success")"
+											data-userid="@Users[i].Id"
+											data-access="@Users[i].hasaccess.ToString().ToLower()">
+										@(Users[i].hasaccess ? "Remove Access" : "Give Access")
+									</button>
+								</td>
+
+
+								<td>
 									<a href="/Admin/DeleteUser/@Users[i].Id" class="btn btn-sm btn-outline-danger ms-2">Delete</a>
 								</td>
 							</tr>
@@ -82,8 +94,40 @@ var Users = ViewBag.Users as List<DubaiChaRaja.Controllers.AdminController.UserS
 				</table>
 			</div>
 		</div>
-	</div>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+				$(document).on('click', '.toggle-access-btn', function () {
+			const btn = $(this);
+			const userId = btn.data('userid');
+			const current = btn.data('access') === true || btn.data('access') === 'true';
 
+			console.log("Access toggle triggered for user:", userId);
+
+			$.ajax({
+				url: '/Admin/ToggleAccess',
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					userId: userId,
+					hasAccess: !current
+				}),
+				success: function () {
+					location.reload();
+				},
+				error: function () {
+					alert('Failed to update access');
+				}
+			});
+		});
+
+	</script>
+<style>
+		body, html {
+			height: 100%;
+			overscroll-behavior: none;
+			overflow-x: hidden;
+		}
+</style>
 
 
 

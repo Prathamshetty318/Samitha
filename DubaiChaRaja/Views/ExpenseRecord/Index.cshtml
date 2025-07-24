@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Dubaicharaja.Models.ExpenseRecord>
+
+@{
+	ViewData["Title"] = "Expense and Income Records";
+}
+
+<h2>ViewData["Title"]</h2>
+
+<p>
+	<a class="btn btn-primary" asp-action="Create">Add New Record</a>
+</p>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Description</th>
+			<th>Amount</th>
+			<th>Type</th>
+			<th>Date</th>
+			<th></th>
+		</tr>	
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@item.Description</td>
+				<td>@item.Amount</td>
+				<td>@item.Type</td>
+				<td>@item.Date.ToShortDateString()</td>
+				<td>
+					<a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+					<a class="btn btn-sm btn-secondary" asp-action="Details" asp-route-id="@item.Id">Details</a>
+					<a  class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table> 

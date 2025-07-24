@@ -17,6 +17,7 @@ $(document).ready(function () {
             data: data,
             success: function (res) {
                 console.log(" Logged in!");
+
                 window.location.href = res.redirect;
             },
             error: function () {
@@ -98,7 +99,7 @@ $(document).ready(function () {
         const code = $("#forgotCode").val();
         const newPassword = this.newPassword.value;
 
-        $.post("/Auth/ResetPassword", { email, code, newPassword })
+        $.post("/Auth/ForgotPassword", { email, newPassword })
             .done(() => {
                 alert(" Password updated!.");
                 window.location.href = "/Home/Welcome";
@@ -108,6 +109,7 @@ $(document).ready(function () {
             });
 
     });
+
 
 
     $(document).on("submit", "#registerForm", function (e) {

@@ -6,11 +6,14 @@ using DubaiChaRaja.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit.Cryptography;
+using Npgsql;
 
 
 
 namespace DubaiChaRaja.Controllers
 {
+
+
         public class AuthController : Controller
         {
             private readonly IUserService _userService;
@@ -37,7 +40,6 @@ namespace DubaiChaRaja.Controllers
             {
                 var user = _userService.ValidateUser(username, password);
 
-                Console.WriteLine("LOGIN HIT for: " + username);
 
             if (user != null)
             {
@@ -106,7 +108,6 @@ namespace DubaiChaRaja.Controllers
             {
                 var errors = new List<string>();
 
-                Console.WriteLine("REGISTER HIT for: " + username);
 
                 if (_userService.UserExists(username))
                 {
@@ -127,19 +128,36 @@ namespace DubaiChaRaja.Controllers
                 return Ok();
             }
 
-            [AllowAnonymous]
-            public IActionResult ResetPassword()
+            [HttpPost]
+            public IActionResult ForgotPassword(string email,string newPassword)
             {
-                return View();
+                _userService.UpdatePassword(email, newPassword);
+                    return View("~/Views/Home/ForgotPassword.cshtml");
+
             }
 
+        [HttpPost]
+        public IActionResult RaiseAccessRequest()
+        {
+            var UserId = HttpContext.Session.GetInt32("UserId");
+            if (UserId == null) return Unauthorized();
+
+            using var conn = new NpgsqlConnection(_connectionString);
+            conn.Open();
+
+            var cmd = new NpgsqlCommand("UPDATE Users SET access_requested = true WHERE Id = @id", conn);
+            cmd.Parameters.AddWithValue("@id", userId.Value);
+            cmd.ExecuteNonQuery();
+
+            return Ok(new { message = "Access request raised." });
+        }
 
 
-            public IActionResult Logout()
-            {
-                HttpContext.Session.Clear();
-                return RedirectToAction("Welcome", "Home");
-            }
+        public IActionResult Logout()
+                {
+                    HttpContext.Session.Clear();
+                    return RedirectToAction("Welcome", "Home");
+                }
         }
 
     }

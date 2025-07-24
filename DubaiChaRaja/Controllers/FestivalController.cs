@@ -67,7 +67,6 @@ public class FestivalController : ControllerBase
             return StatusCode(500, "Internal server error");
         }
     }
-
 }
 
 
